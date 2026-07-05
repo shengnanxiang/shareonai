@@ -1,0 +1,980 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>从「自嗨式定义」到「让自己看到」—— 用AI协助产品定义的实践与感受</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700;900&display=swap');
+
+  /* ========== RESET & BASE ========== */
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --bg: #000000;
+    --surface: #111111;
+    --surface-2: #1a1a1a;
+    --text: #ffffff;
+    --text-secondary: #888888;
+    --text-muted: #555555;
+    --accent: #e63946;
+    --accent-light: #ff5a5a;
+    --accent-glow: rgba(230, 57, 70, 0.15);
+    --border: rgba(255,255,255,0.1);
+    --border-strong: rgba(230,57,70,0.3);
+    --green: #34d399;
+    --radius: 20px;
+    --transition: 0.6s cubic-bezier(0.65, 0, 0.35, 1);
+  }
+
+  html { font-size: 18px; }
+
+  body {
+    font-family: 'Noto Sans SC', -apple-system, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    overflow: hidden;
+    height: 100vh;
+    width: 100vw;
+    letter-spacing: -0.01em;
+  }
+
+  /* ========== SLIDE CONTAINER ========== */
+  .slides {
+    display: flex;
+    width: calc(100vw * 10);
+    height: 100vh;
+    transition: transform var(--transition);
+  }
+
+  .slide {
+    width: 100vw;
+    height: 100vh;
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 100px 120px 80px;
+    position: relative;
+    overflow-y: auto;
+  }
+
+  /* ========== COVER ========== */
+  .slide-cover {
+    background: var(--bg);
+  }
+  .slide-cover .eyebrow {
+    font-size: 14px;
+    text-transform: uppercase;
+    letter-spacing: 4px;
+    color: var(--accent);
+    font-weight: 700;
+    margin-bottom: 32px;
+  }
+  .slide-cover h1 {
+    font-size: clamp(56px, 7vw, 110px);
+    font-weight: 900;
+    text-align: center;
+    line-height: 1.1;
+    position: relative;
+    z-index: 1;
+    max-width: 1100px;
+  }
+  .slide-cover h1 .highlight {
+    color: var(--accent);
+  }
+  .slide-cover .cover-subtitle {
+    font-size: clamp(20px, 2vw, 28px);
+    color: var(--text-secondary);
+    margin-top: 40px;
+    font-weight: 300;
+    letter-spacing: 1px;
+    text-align: center;
+    max-width: 700px;
+    line-height: 1.6;
+  }
+  .slide-cover .cover-line {
+    width: 60px;
+    height: 2px;
+    background: var(--accent);
+    margin-top: 48px;
+  }
+  .slide-cover .cover-meta {
+    position: absolute;
+    bottom: 60px;
+    left: 120px;
+    font-size: 14px;
+    color: var(--text-muted);
+    letter-spacing: 1px;
+  }
+
+  /* ========== CONTENT SLIDE ========== */
+  .slide-content {
+    background: var(--bg);
+    justify-content: center;
+  }
+  .slide-content h2 {
+    font-size: clamp(36px, 4.5vw, 64px);
+    font-weight: 900;
+    margin-bottom: 16px;
+    text-align: center;
+    line-height: 1.15;
+  }
+  .slide-content h2 .accent {
+    color: var(--accent);
+  }
+  .slide-content .section-desc {
+    color: var(--text-secondary);
+    text-align: center;
+    margin-bottom: 56px;
+    font-size: 18px;
+    font-weight: 300;
+    max-width: 700px;
+  }
+
+  /* ========== TIMELINE ========== */
+  .timeline {
+    display: flex;
+    align-items: flex-start;
+    gap: 0;
+    width: 100%;
+    max-width: 1200px;
+    position: relative;
+    padding-top: 60px;
+  }
+  .timeline::before {
+    content: '';
+    position: absolute;
+    top: 80px;
+    left: 140px;
+    right: 140px;
+    height: 1px;
+    background: var(--border);
+  }
+  .timeline-node {
+    flex: 1;
+    text-align: center;
+    position: relative;
+    z-index: 1;
+    opacity: 0;
+    transform: translateY(20px);
+    animation: fadeInUp 0.6s forwards;
+  }
+  .timeline-node:nth-child(1) { animation-delay: 0.3s; }
+  .timeline-node:nth-child(2) { animation-delay: 0.6s; }
+  .timeline-node:nth-child(3) { animation-delay: 0.9s; }
+  .timeline-node:nth-child(4) { animation-delay: 1.2s; }
+  .timeline-dot {
+    width: 160px; height: 160px;
+    border-radius: 16px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    margin: 0 auto 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    transition: all 0.3s;
+    box-shadow: 0 4px 30px rgba(0,0,0,0.3);
+  }
+  .timeline-dot img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.4s;
+  }
+  .timeline-dot img.invert-logo {
+    filter: invert(1);
+    background: #000;
+  }
+  .timeline-node:hover .timeline-dot {
+    border-color: var(--border-strong);
+    box-shadow: 0 0 40px rgba(230,57,70,0.15);
+  }
+  .timeline-node:hover .timeline-dot img {
+    transform: scale(1.05);
+  }
+  .timeline-label {
+    font-weight: 700;
+    font-size: 18px;
+    margin-bottom: 8px;
+  }
+  .timeline-sublabel {
+    font-size: 14px;
+    color: var(--text-secondary);
+  }
+
+  /* ========== RADAR CHART ========== */
+  .radar-container {
+    position: relative;
+    width: 100%;
+    max-width: 900px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto;
+  }
+  .radar-core {
+    position: relative;
+    width: 520px;
+    height: 520px;
+    margin-top: 20px;
+  }
+  .radar-core svg {
+    width: 100%;
+    height: 100%;
+  }
+  .radar-label {
+    position: absolute;
+    text-align: center;
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+  }
+  .radar-label .rl-name {
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--text);
+    white-space: nowrap;
+    transition: color 0.3s;
+  }
+  .radar-label .rl-desc {
+    font-size: 13px;
+    color: var(--text-secondary);
+    margin-top: 4px;
+    white-space: nowrap;
+    transition: color 0.3s;
+  }
+  .radar-label:hover .rl-name { color: var(--accent); }
+  .radar-label:hover .rl-desc { color: var(--accent-light); }
+  .radar-bottom {
+    text-align: center;
+    margin-top: 40px;
+    max-width: 700px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  .radar-bottom p {
+    font-size: 20px;
+    color: var(--text-secondary);
+    font-weight: 300;
+    line-height: 1.6;
+  }
+  .radar-bottom strong { color: var(--accent); }
+
+  /* ========== FLOW CHART ========== */
+  .flow-section {
+    max-width: 1100px;
+    width: 100%;
+  }
+  .flow-chart {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 40px;
+  }
+  .flow-node {
+    padding: 14px 24px;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 500;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    opacity: 0;
+    animation: fadeIn 0.5s forwards;
+  }
+  .flow-node.pain {
+    border-color: var(--border-strong);
+    background: rgba(230,57,70,0.08);
+  }
+  .flow-arrow {
+    color: var(--text-muted);
+    font-size: 18px;
+    opacity: 0;
+    animation: fadeIn 0.5s forwards;
+  }
+  .pain-quote {
+    border-left: 3px solid var(--accent);
+    padding: 28px 32px;
+    background: var(--surface);
+    border-radius: 0 16px 16px 0;
+    max-width: 800px;
+    margin: 0 auto;
+  }
+  .pain-quote p {
+    font-size: 20px;
+    color: var(--text);
+    line-height: 1.7;
+  }
+  .pain-quote strong {
+    color: var(--accent);
+  }
+
+  /* ========== STORY CARDS ========== */
+  .story-cards {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 32px;
+    width: 100%;
+    max-width: 1200px;
+  }
+  .story-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 40px;
+    opacity: 0;
+    animation: fadeInUp 0.6s forwards;
+    transition: all 0.3s;
+  }
+  .story-card:nth-child(1) { animation-delay: 0.2s; }
+  .story-card:nth-child(2) { animation-delay: 0.6s; }
+  .story-card:nth-child(3) { animation-delay: 1.0s; }
+  .story-card:hover {
+    border-color: var(--border-strong);
+    background: var(--surface-2);
+  }
+  .story-card .card-emoji {
+    font-size: 40px;
+    margin-bottom: 24px;
+  }
+  .story-card h3 {
+    font-size: 26px;
+    margin-bottom: 16px;
+    font-weight: 700;
+  }
+  .story-card p {
+    color: var(--text-secondary);
+    font-size: 16px;
+    line-height: 1.8;
+  }
+  .story-card .quote-inline {
+    display: block;
+    margin-top: 24px;
+    padding: 16px;
+    background: rgba(255,255,255,0.03);
+    border-radius: 12px;
+    font-style: italic;
+    color: var(--text);
+    font-size: 15px;
+    line-height: 1.7;
+  }
+  .story-card.self-hi h3 { color: var(--text); }
+  .story-card.shock h3 { color: var(--accent); }
+  .story-card.insight h3 { color: var(--green); }
+
+  /* ========== COMPARE BLOCK ========== */
+  .compare-block {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0;
+    border-radius: var(--radius);
+    overflow: hidden;
+    border: 1px solid var(--border);
+    width: 100%;
+    max-width: 1100px;
+    opacity: 0;
+    animation: fadeInUp 0.6s 0.3s forwards;
+  }
+  .compare-col {
+    padding: 48px 40px;
+  }
+  .compare-col.old {
+    background: rgba(230,57,70,0.05);
+    border-right: 1px solid var(--border);
+  }
+  .compare-col.new {
+    background: var(--surface);
+  }
+  .compare-col .col-tag {
+    display: inline-block;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    font-weight: 700;
+    padding: 6px 12px;
+    border-radius: 4px;
+    margin-bottom: 24px;
+  }
+  .compare-col.old .col-tag {
+    color: var(--accent);
+    background: rgba(230,57,70,0.15);
+  }
+  .compare-col.new .col-tag {
+    color: var(--text);
+    background: rgba(255,255,255,0.08);
+  }
+  .compare-col h3 {
+    font-size: 26px;
+    font-weight: 700;
+    margin-bottom: 20px;
+  }
+  .compare-col ul {
+    list-style: none;
+  }
+  .compare-col ul li {
+    padding: 12px 0;
+    color: var(--text-secondary);
+    font-size: 16px;
+    line-height: 1.7;
+    border-bottom: 1px solid rgba(255,255,255,0.04);
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+  }
+  .compare-col.old ul li::before { content: "✕"; color: var(--accent); font-size: 14px; flex-shrink: 0; margin-top: 2px; }
+  .compare-col.new ul li::before { content: "✓"; color: var(--green); font-size: 16px; flex-shrink: 0; margin-top: 2px; }
+  .compare-note {
+    margin-top: 28px;
+    padding: 18px 28px;
+    background: var(--surface);
+    border-radius: 12px;
+    max-width: 1100px;
+    width: 100%;
+    text-align: center;
+    opacity: 0;
+    animation: fadeInUp 0.6s 0.8s forwards;
+  }
+  .compare-note p { color: var(--text-secondary); font-size: 16px; }
+  .compare-note strong { color: var(--text); }
+
+  /* ========== SHOWCASE ========== */
+  .showcase-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 32px;
+    width: 100%;
+    max-width: 1100px;
+  }
+  .showcase-card {
+    background: var(--surface);
+    border: 1px dashed var(--border);
+    border-radius: var(--radius);
+    padding: 56px 48px;
+    text-align: center;
+    transition: all 0.3s;
+    min-height: 320px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+  .showcase-card:hover {
+    border-color: var(--border-strong);
+    border-style: solid;
+    background: var(--surface-2);
+  }
+  .showcase-card .placeholder {
+    font-size: 56px;
+    margin-bottom: 24px;
+    opacity: 0.5;
+  }
+  .showcase-card h3 {
+    font-size: 22px;
+    margin-bottom: 12px;
+  }
+  .showcase-card p {
+    font-size: 15px;
+    color: var(--text-secondary);
+  }
+  .showcase-card .todo {
+    color: var(--text-muted);
+    font-size: 13px;
+    margin-top: 16px;
+  }
+
+  /* ========== INSIGHTS ========== */
+  .insight-block {
+    background: var(--surface);
+    border-left: 3px solid var(--accent);
+    padding: 28px 36px;
+    border-radius: 0 16px 16px 0;
+    margin: 16px 0;
+    max-width: 900px;
+    width: 100%;
+    opacity: 0;
+    animation: fadeInUp 0.6s forwards;
+  }
+  .insight-block:nth-child(2) { animation-delay: 0.3s; }
+  .insight-block:nth-child(3) { animation-delay: 0.6s; }
+  .insight-block:nth-child(4) { animation-delay: 0.9s; }
+  .insight-block p {
+    font-size: 20px;
+    line-height: 1.8;
+    color: var(--text);
+    font-weight: 400;
+  }
+  .insight-block strong { color: var(--accent); }
+
+  /* ========== Q&A ========== */
+  .qa-area {
+    width: 100%;
+    max-width: 700px;
+    text-align: center;
+  }
+  .qa-poll {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin: 40px 0;
+  }
+  .qa-poll-btn {
+    padding: 18px 32px;
+    border-radius: 12px;
+    border: 1px solid var(--border);
+    background: var(--surface);
+    color: var(--text);
+    font-size: 16px;
+    cursor: pointer;
+    transition: all 0.3s;
+    font-family: inherit;
+  }
+  .qa-poll-btn:hover, .qa-poll-btn.selected {
+    border-color: var(--accent);
+    background: rgba(230,57,70,0.1);
+    color: var(--accent-light);
+  }
+  .qa-note {
+    margin-top: 48px;
+    color: var(--text-secondary);
+    font-size: 16px;
+  }
+
+  /* ========== NAVIGATION ========== */
+  .page-indicator {
+    position: fixed;
+    top: 32px;
+    right: 48px;
+    font-size: 14px;
+    color: var(--accent);
+    z-index: 100;
+    font-weight: 700;
+    letter-spacing: 1px;
+    font-variant-numeric: tabular-nums;
+  }
+  .nav-dots {
+    position: fixed;
+    bottom: 40px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 12px;
+    z-index: 100;
+  }
+  .nav-dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.15);
+    cursor: pointer;
+    transition: all 0.3s;
+    border: none;
+  }
+  .nav-dot.active {
+    background: var(--accent);
+    width: 28px;
+    border-radius: 4px;
+  }
+  .nav-arrows {
+    position: fixed;
+    top: 50%;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    padding: 0 32px;
+    z-index: 100;
+    pointer-events: none;
+    transform: translateY(-50%);
+  }
+  .nav-arrow {
+    pointer-events: auto;
+    width: 48px; height: 48px;
+    border-radius: 50%;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 20px;
+    color: var(--text);
+    transition: all 0.3s;
+  }
+  .nav-arrow:hover {
+    background: var(--accent-glow);
+    border-color: var(--accent);
+  }
+  .slide-num {
+    position: absolute;
+    bottom: 40px;
+    left: 48px;
+    font-size: 13px;
+    color: var(--text-muted);
+  }
+
+  /* ========== ANIMATIONS ========== */
+  @keyframes fadeInUp {
+    to { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes fadeIn {
+    to { opacity: 1; }
+  }
+
+  /* ========== RESPONSIVE ========== */
+  @media (max-width: 1024px) {
+    .slide { padding: 80px 60px 60px; }
+    .radar-container { flex-direction: column; gap: 40px; }
+    .story-cards { grid-template-columns: 1fr; }
+    .compare-block { grid-template-columns: 1fr; }
+    .compare-col.old { border-right: none; border-bottom: 1px solid var(--border); }
+    .showcase-grid { grid-template-columns: 1fr; }
+    .timeline { flex-direction: column; gap: 24px; padding-top: 0; }
+    .timeline::before { display: none; }
+    .flow-chart { flex-direction: column; }
+    .flow-arrow { transform: rotate(90deg); }
+    .nav-arrows { display: none; }
+    .slide-cover .cover-meta { left: 60px; }
+  }
+
+  .slide::-webkit-scrollbar { width: 4px; }
+  .slide::-webkit-scrollbar-track { background: transparent; }
+  .slide::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+</style>
+</head>
+<body>
+
+<div class="page-indicator" id="pageIndicator">1 / 10</div>
+
+<div class="slides" id="slides">
+
+  <!-- ====== 0: COVER ====== -->
+  <div class="slide slide-cover">
+    <h1>从<span class="highlight">「自嗨式定义」</span><br>到<span class="highlight">「让自己看到」</span></h1>
+    <p class="cover-subtitle">用AI协助产品定义的实践与感受</p>
+    <div class="cover-line"></div>
+    <div class="cover-meta">2026.7</div>
+  </div>
+
+  <!-- ====== 1: ABOUT ME ====== -->
+  <div class="slide slide-content">
+    <h2>我是谁</h2>
+    <div class="timeline">
+      <div class="timeline-node">
+        <div class="timeline-dot"><img src="assets/hp.jpg" alt="HP" class="invert-logo"></div>
+        <div class="timeline-label">UX/UI 设计师</div>
+        <div class="timeline-sublabel">职业生涯起点</div>
+      </div>
+      <div class="timeline-node">
+        <div class="timeline-dot"><img src="assets/ef.jpg" alt="EF" class="invert-logo"></div>
+        <div class="timeline-label">英语教育 产品经理</div>
+        <div class="timeline-sublabel">App & Web 产品</div>
+      </div>
+      <div class="timeline-node">
+        <div class="timeline-dot"><img src="assets/mint2.jpg" alt="Mint"></div>
+        <div class="timeline-label">Mint 产品经理</div>
+        <div class="timeline-sublabel">加入汉图</div>
+      </div>
+      <div class="timeline-node">
+        <div class="timeline-dot"><img src="assets/aiken.png" alt="AiKen"></div>
+        <div class="timeline-label">AiKen 相机 产品经理</div>
+        <div class="timeline-sublabel">现在</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ====== 2: PM RADAR ====== -->
+  <div class="slide slide-content">
+    <h2>产品经理的<span class="accent">能力</span>画像</h2>
+    <div class="radar-container">
+      <div class="radar-core">
+        <svg viewBox="0 0 520 520">
+          <defs>
+            <radialGradient id="centerGlow" cx="50%" cy="50%">
+              <stop offset="0%" stop-color="rgba(230,57,70,0.08)"/>
+              <stop offset="100%" stop-color="transparent"/>
+            </radialGradient>
+          </defs>
+          <!-- Background glow -->
+          <circle cx="260" cy="260" r="240" fill="url(#centerGlow)"/>
+          <!-- Grid pentagons -->
+          <g stroke="rgba(255,255,255,0.04)" fill="none" stroke-width="1">
+            <polygon points="260,30 506,210 414,476 106,476 14,210"/>
+            <polygon points="260,76 473,216 397,428 123,428 47,216"/>
+            <polygon points="260,122 440,222 380,380 140,380 80,222"/>
+            <polygon points="260,168 407,228 363,332 157,332 113,228"/>
+            <polygon points="260,214 374,234 346,284 174,284 146,234"/>
+          </g>
+          <!-- Axes -->
+          <g stroke="rgba(255,255,255,0.06)" stroke-width="1">
+            <line x1="260" y1="30" x2="260" y2="476"/>
+            <line x1="506" y1="210" x2="14" y2="210"/>
+          </g>
+          <!-- Data shape -->
+          <polygon points="260,100 428,210 380,410 140,410 92,210" fill="rgba(230,57,70,0.1)" stroke="#e63946" stroke-width="2.5"/>
+          <!-- Data dots -->
+          <circle cx="260" cy="100" r="7" fill="#e63946"><animate attributeName="r" values="5;8;5" dur="3s" repeatCount="indefinite"/></circle>
+          <circle cx="428" cy="210" r="6" fill="#e63946"/>
+          <circle cx="380" cy="410" r="6" fill="#e63946"/>
+          <circle cx="140" cy="410" r="6" fill="#e63946"/>
+          <circle cx="92" cy="210" r="6" fill="#e63946"/>
+          <!-- Center accent dot -->
+          <circle cx="260" cy="260" r="2" fill="#e63946" opacity="0.5"/>
+        </svg>
+        <!-- Labels positioned at pentagon vertices -->
+        <div class="radar-label" style="left:50%;top:5%;"><div class="rl-name">用户洞察</div><div class="rl-desc">理解场景与行为</div></div>
+        <div class="radar-label" style="left:97%;top:40%;"><div class="rl-name">概念定义</div><div class="rl-desc">模糊概念 → 清晰定义</div></div>
+        <div class="radar-label" style="left:73%;top:89%;"><div class="rl-name">原型验证</div><div class="rl-desc" style="color:#e63946;">让其他四项能力落地的关键</div></div>
+        <div class="radar-label" style="left:27%;top:89%;"><div class="rl-name">跨团队沟通</div><div class="rl-desc">消除信息不对称</div></div>
+        <div class="radar-label" style="left:3%;top:40%;"><div class="rl-name">产品决策</div><div class="rl-desc">用数据辅助判断</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ====== 3: OLD WORLD ====== -->
+  <div class="slide slide-content">
+    <h2>没有AI的<span class="accent">旧世界</span></h2>
+    <p class="section-desc">决策发生在「还没看到产品」的阶段</p>
+    <div class="flow-section">
+      <div class="flow-chart">
+        <span class="flow-node">📊 调研</span>
+        <span class="flow-arrow">→</span>
+        <span class="flow-node">💡 想概念</span>
+        <span class="flow-arrow">→</span>
+        <span class="flow-node pain">📝 写PRD</span>
+        <span class="flow-arrow">→</span>
+        <span class="flow-node pain">🔍 陷细节</span>
+        <span class="flow-arrow">→</span>
+        <span class="flow-node pain">😰 漏边界</span>
+        <span class="flow-arrow">→</span>
+        <span class="flow-node pain">🩹 被动补</span>
+        <span class="flow-arrow">→</span>
+        <span class="flow-node">👨‍💻 开发</span>
+        <span class="flow-arrow">→</span>
+        <span class="flow-node pain">🔄 返工</span>
+        <span class="flow-arrow">→</span>
+        <span class="flow-node">🚀 上市</span>
+      </div>
+      <div class="pain-quote">
+        <p>PRD 是文字的。10个人看同一份 PRD，<strong>脑子里有10个不同的产品。</strong></p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ====== 4: ★ THE STORY ====== -->
+  <div class="slide slide-content">
+    <h2><span class="accent">★</span> 一个差点犯错的故事</h2>
+    <p class="section-desc">关于「胶卷载入」—— 我在 Figma 里自嗨，直到把原型放到家人面前</p>
+    <div class="story-cards">
+      <div class="story-card self-hi">
+        <div class="card-emoji">🎨</div>
+        <h3>自嗨</h3>
+        <p>AiKen 最初想忠实还原胶卷体验。拍摄前必须打开 App，选择「胶卷」载入，一旦开拍不可更换风格，拍完才能「取出」和「冲洗」。</p>
+        <span class="quote-inline">"我在 Figma 里做了高保真原型，沉浸其中，觉得整个流程非常顺滑。"</span>
+      </div>
+      <div class="story-card shock">
+        <div class="card-emoji">😰</div>
+        <h3>冲击</h3>
+        <p>我让儿子和老婆试用。</p>
+        <p>儿子：不知道胶卷是什么，根本不知道怎么用。</p>
+        <p>老婆：对必须先载入、中间不能换风格感到强烈不满。</p>
+        <span class="quote-inline">"我在自嗨。我把自己的认知当成了用户的认知。"</span>
+      </div>
+      <div class="story-card insight">
+        <div class="card-emoji">💡</div>
+        <h3>领悟</h3>
+        <p>高保真不是问题，问题是我没把它放到真人面前。</p>
+        <p>Figma 的 AI 让我更快地「自嗨」，但真正的价值在于<strong>让自己先看到真实场景</strong>。</p>
+        <span class="quote-inline">"先看到不够，要让自己看到真实。"</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ====== 5: AI - RESEARCH ====== -->
+  <div class="slide slide-content">
+    <h2>AI 改变了<span class="accent">调研</span></h2>
+    <p class="section-desc">从「我觉得」到「数据显示」</p>
+    <div class="compare-block">
+      <div class="compare-col old">
+        <span class="col-tag">Before</span>
+        <h3>手工调研</h3>
+        <ul>
+          <li>手动翻评论，复制粘贴到 Excel</li>
+          <li>数据量受限于个人时间</li>
+          <li>竞品分析靠「我觉得」</li>
+          <li>用户画像靠经验和直觉</li>
+          <li>结论常常是「大概是这样」</li>
+        </ul>
+      </div>
+      <div class="compare-col new">
+        <span class="col-tag">After</span>
+        <h3>数据驱动</h3>
+        <ul>
+          <li>快速抓取海量真实评论</li>
+          <li>自动归类痛点和需求频次</li>
+          <li>竞品分析有据可依</li>
+          <li>直观「看到」用户如何使用产品</li>
+          <li>快速收敛方向</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- ====== 6: AI - PROTOTYPING ====== -->
+  <div class="slide slide-content">
+    <h2>AI 改变了<span class="accent">原型</span></h2>
+    <p class="section-desc">真正的突破点</p>
+    <div class="compare-block">
+      <div class="compare-col old">
+        <span class="col-tag">Before</span>
+        <h3>慢速原型</h3>
+        <ul>
+          <li>依赖设计师排期，等待数天</li>
+          <li>修改成本高，不敢大改</li>
+          <li>PRD 写完才发现问题</li>
+          <li>容易忽略核心体验流程</li>
+          <li>验证一个假设要一周以上</li>
+        </ul>
+      </div>
+      <div class="compare-col new">
+        <span class="col-tag">After</span>
+        <h3>快速迭代</h3>
+        <ul>
+          <li>几小时内出可交互原型</li>
+          <li>UX 用 WorkBuddy 做了软硬件展示网站</li>
+          <li>我自己做了相机 + 打印机联动 demo</li>
+          <li>先看到「产品可以怎么用」，再写 PRD</li>
+          <li>拿原型让团队/用户验证</li>
+        </ul>
+      </div>
+    </div>
+    <div class="compare-note">
+      <p><strong>原型能力是「传染」的。</strong>看到 UX 用 WorkBuddy 做出来后，我也开始自己上手。</p>
+    </div>
+  </div>
+
+  <!-- ====== 7: DEMO ====== -->
+  <div class="slide slide-content">
+    <h2>Demo：<span class="accent">AiKen</span> × AI</h2>
+    <p class="section-desc">真实案例展示 AI 如何贯穿硬件产品全流程</p>
+    <div class="showcase-grid">
+      <div class="showcase-card">
+        <div class="placeholder">🌐</div>
+        <h3>软硬件展示网站</h3>
+        <p>UX 用 WorkBuddy 制作，一个页面完整展示从开机到成片的全流程</p>
+        <p class="todo">[TODO: 截图或录屏]</p>
+      </div>
+      <div class="showcase-card">
+        <div class="placeholder">🔗</div>
+        <h3>相机 + 打印机联动</h3>
+        <p>我自己用 WorkBuddy 做的联动 demo，验证核心使用场景</p>
+        <p class="todo">[TODO: 截图或录屏]</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ====== 8: INSIGHTS ====== -->
+  <div class="slide slide-content">
+    <h2>我的<span class="accent">核心体会</span></h2>
+    <p class="section-desc">AI 没有替代我的思考，但它把我最擅长的能力放大了</p>
+    <div class="insight-block">
+      <p><strong>设计师背景 + Design Thinking + AI</strong> = Prototyping 能力质的飞跃。</p>
+    </div>
+    <div class="insight-block">
+      <p>不是 AI 替代了思考，而是<strong>加速了验证循环</strong>。</p>
+    </div>
+    <div class="insight-block">
+      <p>找到你自己的核心能力，让 AI 放大它。<strong>「先让自己看到真实，再决定做。」</strong></p>
+    </div>
+    <div class="insight-block">
+      <p>🤷 3D 效果图我还没搞明白。<strong>AI 也不是万能的。</strong></p>
+    </div>
+  </div>
+
+  <!-- ====== 9: Q&A ====== -->
+  <div class="slide slide-content">
+    <h2><span class="accent">Q&A</span></h2>
+    <p class="section-desc">你打算在自己的工作中先用 AI 试什么？</p>
+    <div class="qa-area">
+      <div class="qa-poll" id="poll">
+        <button class="qa-poll-btn" onclick="vote('prototype')">🖥️ 做原型 / Demo</button>
+        <button class="qa-poll-btn" onclick="vote('research')">📊 用户调研分析</button>
+        <button class="qa-poll-btn" onclick="vote('writing')">📝 写文档 / PRD</button>
+        <button class="qa-poll-btn" onclick="vote('automation')">⚡ 自动化工作流</button>
+      </div>
+      <p id="pollResult" style="color:var(--accent-light); font-size:16px; min-height:24px;"></p>
+      <div class="qa-note">
+        <p>谢谢大家</p>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<div class="nav-arrows">
+  <button class="nav-arrow" onclick="prevSlide()" aria-label="上一页">◂</button>
+  <button class="nav-arrow" onclick="nextSlide()" aria-label="下一页">▸</button>
+</div>
+
+<div class="nav-dots" id="navDots"></div>
+
+<script>
+  const TOTAL = 10;
+  let current = 0;
+  const slides = document.getElementById('slides');
+  const indicator = document.getElementById('pageIndicator');
+  const navDots = document.getElementById('navDots');
+
+  for (let i = 0; i < TOTAL; i++) {
+    const dot = document.createElement('button');
+    dot.className = 'nav-dot' + (i === 0 ? ' active' : '');
+    dot.onclick = () => goSlide(i);
+    dot.setAttribute('aria-label', `第${i + 1}页`);
+    navDots.appendChild(dot);
+  }
+
+  function updateUI() {
+    slides.style.transform = `translateX(-${current * 100}vw)`;
+    const dots = navDots.querySelectorAll('.nav-dot');
+    dots.forEach((d, i) => d.classList.toggle('active', i === current));
+    indicator.textContent = `${current + 1} / ${TOTAL}`;
+  }
+
+  function nextSlide() { if (current < TOTAL - 1) { current++; updateUI(); } }
+  function prevSlide() { if (current > 0) { current--; updateUI(); } }
+  function goSlide(i) { current = i; updateUI(); }
+
+  document.addEventListener('keydown', e => {
+    if (e.key === 'ArrowRight' || e.key === 'ArrowDown') { e.preventDefault(); nextSlide(); }
+    if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') { e.preventDefault(); prevSlide(); }
+  });
+
+  let touchX = 0, touchY = 0;
+  document.addEventListener('touchstart', e => {
+    touchX = e.touches[0].clientX;
+    touchY = e.touches[0].clientY;
+  }, { passive: true });
+  document.addEventListener('touchend', e => {
+    const dx = touchX - e.changedTouches[0].clientX;
+    const dy = touchY - e.changedTouches[0].clientY;
+    if (Math.abs(dx) > Math.abs(dy) && Math.abs(dx) > 50) {
+      if (dx > 0) nextSlide(); else prevSlide();
+    }
+  });
+
+  let voted = false;
+  function vote(choice) {
+    if (voted) return;
+    voted = true;
+    const labels = { prototype: '做原型/Demo', research: '用户调研分析', writing: '写文档/PRD', automation: '自动化工作流' };
+    document.getElementById('pollResult').textContent = `✓ 你选择了「${labels[choice]}」——谢谢！`;
+    document.querySelectorAll('.qa-poll-btn').forEach(b => {
+      b.classList.remove('selected');
+      if (b.textContent.includes(labels[choice])) b.classList.add('selected');
+    });
+  }
+</script>
+
+</body>
+</html>
