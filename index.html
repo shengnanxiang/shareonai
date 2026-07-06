@@ -42,7 +42,7 @@
   /* ========== SLIDE CONTAINER ========== */
   .slides {
     display: flex;
-    width: calc(100vw * 10);
+    width: calc(100vw * 12);
     height: 100vh;
     transition: transform var(--transition);
   }
@@ -213,13 +213,13 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    margin: 0 auto;
+    margin: 16px auto;
   }
   .radar-core {
     position: relative;
-    width: 520px;
-    height: 520px;
-    margin-top: 20px;
+    width: 460px;
+    height: 460px;
+    margin-top: 0px;
   }
   .radar-core svg {
     width: 100%;
@@ -266,6 +266,10 @@
   .flow-section {
     max-width: 1100px;
     width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
   }
   .flow-chart {
     display: flex;
@@ -273,7 +277,6 @@
     gap: 12px;
     align-items: center;
     justify-content: center;
-    margin-bottom: 40px;
   }
   .flow-node {
     padding: 14px 24px;
@@ -301,7 +304,7 @@
     background: var(--surface);
     border-radius: 0 16px 16px 0;
     max-width: 800px;
-    margin: 0 auto;
+    margin: 32px auto 0;
   }
   .pain-quote p {
     font-size: 20px;
@@ -311,6 +314,37 @@
   .pain-quote strong {
     color: var(--accent);
   }
+
+  /* ========== PHONE COMPARISON (Slide 7) ========== */
+  .phone-comparison {
+    display: flex;
+    gap: 40px;
+    justify-content: center;
+    align-items: center;
+    min-height: 492px;
+  }
+  .phone-comparison .phone-col {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+  }
+  .phone-comparison .phone-col img {
+    height: 60vh;
+    max-height: 520px;
+    width: auto;
+    border-radius: 20px;
+    border: 1px solid rgba(255,255,255,0.1);
+    box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+  }
+  .phone-comparison .phone-col .col-label {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--text);
+    letter-spacing: 1px;
+  }
+  .phone-comparison .phone-col.before .col-label { color: var(--accent); }
+  .phone-comparison .phone-col.after .col-label { color: var(--green); }
 
   /* ========== STORY CARDS ========== */
   .story-cards {
@@ -365,7 +399,27 @@
   .story-card.shock h3 { color: var(--accent); }
   .story-card.insight h3 { color: var(--green); }
 
-  /* ========== COMPARE BLOCK ========== */
+  /* ========== PHONE MOCKUP GALLERY (Slide 6) ========== */
+  .phone-gallery {
+    display: flex;
+    gap: 24px;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    max-width: 1200px;
+  }
+  .phone-gallery img {
+    height: 60vh;
+    max-height: 560px;
+    width: auto;
+    border-radius: 20px;
+    border: 1px solid rgba(255,255,255,0.1);
+    box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+    transition: transform 0.3s;
+  }
+  .phone-gallery img:hover {
+    transform: translateY(-8px);
+  }
   .compare-block {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -374,12 +428,14 @@
     overflow: hidden;
     border: 1px solid var(--border);
     width: 100%;
-    max-width: 1100px;
+    max-width: 860px;
+    margin: 0 auto;
     opacity: 0;
     animation: fadeInUp 0.6s 0.3s forwards;
   }
   .compare-col {
-    padding: 48px 40px;
+    padding: 32px;
+    text-align: center;
   }
   .compare-col.old {
     background: rgba(230,57,70,0.05);
@@ -413,6 +469,8 @@
   }
   .compare-col ul {
     list-style: none;
+    text-align: left;
+    display: inline-block;
   }
   .compare-col ul li {
     padding: 12px 0;
@@ -484,6 +542,37 @@
     font-size: 13px;
     margin-top: 16px;
   }
+  .showcase-card.img-card {
+    background-size: cover;
+    background-position: center;
+    border: 1px solid var(--border);
+    padding: 0;
+    aspect-ratio: 3 / 2;
+    width: 100%;
+    min-height: auto;
+    position: relative;
+    overflow: hidden;
+    justify-content: flex-end;
+  }
+  .showcase-card.img-card .card-overlay {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 32px;
+    background: linear-gradient(to top, rgba(0,0,0,0.95), rgba(0,0,0,0.6) 60%, transparent);
+  }
+  .showcase-card.img-card .card-overlay h3 {
+    color: var(--text);
+    font-size: 24px;
+    margin-bottom: 8px;
+  }
+  .showcase-card.img-card .card-overlay p {
+    color: var(--text-secondary);
+    font-size: 15px;
+    max-width: 360px;
+    margin: 0 auto;
+  }
 
   /* ========== INSIGHTS ========== */
   .insight-block {
@@ -505,6 +594,7 @@
     line-height: 1.8;
     color: var(--text);
     font-weight: 400;
+    text-align: center;
   }
   .insight-block strong { color: var(--accent); }
 
@@ -645,7 +735,7 @@
 </head>
 <body>
 
-<div class="page-indicator" id="pageIndicator">1 / 10</div>
+<div class="page-indicator" id="pageIndicator">1 / 12</div>
 
 <div class="slides" id="slides">
 
@@ -714,7 +804,7 @@
           <!-- Data shape -->
           <polygon points="260,100 428,210 380,410 140,410 92,210" fill="rgba(230,57,70,0.1)" stroke="#e63946" stroke-width="2.5"/>
           <!-- Data dots -->
-          <circle cx="260" cy="100" r="7" fill="#e63946"><animate attributeName="r" values="5;8;5" dur="3s" repeatCount="indefinite"/></circle>
+          <circle cx="260" cy="100" r="6" fill="#e63946"/>
           <circle cx="428" cy="210" r="6" fill="#e63946"/>
           <circle cx="380" cy="410" r="6" fill="#e63946"/>
           <circle cx="140" cy="410" r="6" fill="#e63946"/>
@@ -723,11 +813,55 @@
           <circle cx="260" cy="260" r="2" fill="#e63946" opacity="0.5"/>
         </svg>
         <!-- Labels positioned at pentagon vertices -->
-        <div class="radar-label" style="left:50%;top:5%;"><div class="rl-name">用户洞察</div><div class="rl-desc">理解场景与行为</div></div>
+        <div class="radar-label" style="left:50%;top:calc(3.5% + 4px);"><div class="rl-name">用户洞察</div><div class="rl-desc">理解场景与行为</div></div>
         <div class="radar-label" style="left:97%;top:40%;"><div class="rl-name">概念定义</div><div class="rl-desc">模糊概念 → 清晰定义</div></div>
-        <div class="radar-label" style="left:73%;top:89%;"><div class="rl-name">原型验证</div><div class="rl-desc" style="color:#e63946;">让其他四项能力落地的关键</div></div>
+        <div class="radar-label" style="left:73%;top:89%;"><div class="rl-name">原型验证</div><div class="rl-desc">快速看到产品怎么用</div></div>
         <div class="radar-label" style="left:27%;top:89%;"><div class="rl-name">跨团队沟通</div><div class="rl-desc">消除信息不对称</div></div>
         <div class="radar-label" style="left:3%;top:40%;"><div class="rl-name">产品决策</div><div class="rl-desc">用数据辅助判断</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ====== 2b: RADAR CENTERED ====== -->
+  <div class="slide slide-content">
+    <h2>产品经理的<span class="accent">能力</span>画像</h2>
+    <div class="radar-container">
+      <div class="radar-core" style="width:460px;height:460px;">
+        <svg viewBox="0 0 560 560">
+          <defs>
+            <radialGradient id="centerGlow2" cx="50%" cy="50%">
+              <stop offset="0%" stop-color="rgba(230,57,70,0.15)"/>
+              <stop offset="50%" stop-color="rgba(230,57,70,0.03)"/>
+              <stop offset="100%" stop-color="transparent"/>
+            </radialGradient>
+          </defs>
+          <!-- Background glow -->
+          <circle cx="280" cy="280" r="260" fill="url(#centerGlow2)"/>
+          <!-- Dashed lines from center to 4 positions (shortened to not overlap text) -->
+          <g stroke="#e63946" stroke-width="2" stroke-dasharray="6,8" opacity="0.6">
+            <!-- 1:30 → upper right (stop before text) -->
+            <line x1="310" y1="250" x2="390" y2="170"/>
+            <!-- 4:30 → lower right -->
+            <line x1="310" y1="310" x2="390" y2="390"/>
+            <!-- 7:30 → lower left -->
+            <line x1="250" y1="310" x2="170" y2="390"/>
+            <!-- 10:30 → upper left -->
+            <line x1="250" y1="250" x2="170" y2="170"/>
+          </g>
+        </svg>
+        <!-- Center label: 原型验证 -->
+        <div class="radar-label" style="left:50%;top:50%;transform:translate(-50%,-50%);">
+          <div class="rl-name" style="color:#e63946;font-size:24px;">原型验证</div>
+          <div class="rl-desc" style="color:#e63946;font-size:13px;margin-top:6px;">让其他四项能力落地的关键</div>
+        </div>
+        <!-- 1:30 position: 用户洞察 -->
+        <div class="radar-label" style="left:82%;top:18%;"><div class="rl-name">用户洞察</div><div class="rl-desc">理解场景与行为</div></div>
+        <!-- 4:30 position: 概念定义 -->
+        <div class="radar-label" style="left:82%;top:82%;"><div class="rl-name">概念定义</div><div class="rl-desc">模糊概念 → 清晰定义</div></div>
+        <!-- 7:30 position: 产品决策 -->
+        <div class="radar-label" style="left:18%;top:82%;"><div class="rl-name">产品决策</div><div class="rl-desc">用数据辅助判断</div></div>
+        <!-- 10:30 position: 跨团队沟通 -->
+        <div class="radar-label" style="left:18%;top:18%;"><div class="rl-name">跨团队沟通</div><div class="rl-desc">消除信息不对称</div></div>
       </div>
     </div>
   </div>
@@ -735,9 +869,8 @@
   <!-- ====== 3: OLD WORLD ====== -->
   <div class="slide slide-content">
     <h2>没有AI的<span class="accent">旧世界</span></h2>
-    <p class="section-desc">决策发生在「还没看到产品」的阶段</p>
-    <div class="flow-section">
-      <div class="flow-chart">
+    <div class="flow-section" style="min-height:492px; display:flex; flex-direction:column; align-items:center; justify-content:center;">
+      <div class="flow-chart" style="margin-bottom:16px;">
         <span class="flow-node">📊 调研</span>
         <span class="flow-arrow">→</span>
         <span class="flow-node">💡 想概念</span>
@@ -747,12 +880,15 @@
         <span class="flow-node pain">🔍 陷细节</span>
         <span class="flow-arrow">→</span>
         <span class="flow-node pain">😰 漏边界</span>
-        <span class="flow-arrow">→</span>
+      </div>
+      <div class="flow-chart" style="margin-bottom:0;">
         <span class="flow-node pain">🩹 被动补</span>
         <span class="flow-arrow">→</span>
         <span class="flow-node">👨‍💻 开发</span>
         <span class="flow-arrow">→</span>
         <span class="flow-node pain">🔄 返工</span>
+        <span class="flow-arrow">→</span>
+        <span class="flow-node pain">🔁 陷入循环</span>
         <span class="flow-arrow">→</span>
         <span class="flow-node">🚀 上市</span>
       </div>
@@ -762,70 +898,82 @@
     </div>
   </div>
 
-  <!-- ====== 4: ★ THE STORY ====== -->
+  <!-- ====== 4: THE SELF-HI ====== -->
   <div class="slide slide-content">
-    <h2><span class="accent">★</span> 一个差点犯错的故事</h2>
-    <p class="section-desc">关于「胶卷载入」—— 我在 Figma 里自嗨，直到把原型放到家人面前</p>
-    <div class="story-cards">
-      <div class="story-card self-hi">
-        <div class="card-emoji">🎨</div>
-        <h3>自嗨</h3>
-        <p>AiKen 最初想忠实还原胶卷体验。拍摄前必须打开 App，选择「胶卷」载入，一旦开拍不可更换风格，拍完才能「取出」和「冲洗」。</p>
-        <span class="quote-inline">"我在 Figma 里做了高保真原型，沉浸其中，觉得整个流程非常顺滑。"</span>
+    <h2>我以为我在追求<span class="accent">极致</span></h2>
+    <div class="phone-gallery" style="min-height:492px; display:flex; align-items:center; justify-content:center;">
+      <img src="assets/01.png" alt="01">
+      <img src="assets/02.png" alt="02">
+      <img src="assets/03.png" alt="03">
+      <img src="assets/04.png" alt="04">
+      <img src="assets/05.png" alt="05">
+    </div>
+  </div>
+
+  <!-- ====== 4b: THE SHOCK ====== -->
+  <div class="slide slide-content">
+    <h2>用户很<span class="accent">懵</span></h2>
+    <div class="phone-comparison">
+      <div class="phone-col before">
+        <img src="assets/before.jpg" alt="我眼中的流程">
+        <div class="col-label">产品定的第一步</div>
       </div>
-      <div class="story-card shock">
-        <div class="card-emoji">😰</div>
-        <h3>冲击</h3>
-        <p>我让儿子和老婆试用。</p>
-        <p>儿子：不知道胶卷是什么，根本不知道怎么用。</p>
-        <p>老婆：对必须先载入、中间不能换风格感到强烈不满。</p>
-        <span class="quote-inline">"我在自嗨。我把自己的认知当成了用户的认知。"</span>
-      </div>
-      <div class="story-card insight">
-        <div class="card-emoji">💡</div>
-        <h3>领悟</h3>
-        <p>高保真不是问题，问题是我没把它放到真人面前。</p>
-        <p>Figma 的 AI 让我更快地「自嗨」，但真正的价值在于<strong>让自己先看到真实场景</strong>。</p>
-        <span class="quote-inline">"先看到不够，要让自己看到真实。"</span>
+      <div class="phone-col after">
+        <img src="assets/after.jpg" alt="用户眼中的流程">
+        <div class="col-label">用户要的第一步</div>
       </div>
     </div>
   </div>
 
-  <!-- ====== 5: AI - RESEARCH ====== -->
+  <!-- ====== 4c: RADAR CENTERED COPY ====== -->
   <div class="slide slide-content">
-    <h2>AI 改变了<span class="accent">调研</span></h2>
-    <p class="section-desc">从「我觉得」到「数据显示」</p>
-    <div class="compare-block">
-      <div class="compare-col old">
-        <span class="col-tag">Before</span>
-        <h3>手工调研</h3>
-        <ul>
-          <li>手动翻评论，复制粘贴到 Excel</li>
-          <li>数据量受限于个人时间</li>
-          <li>竞品分析靠「我觉得」</li>
-          <li>用户画像靠经验和直觉</li>
-          <li>结论常常是「大概是这样」</li>
-        </ul>
-      </div>
-      <div class="compare-col new">
-        <span class="col-tag">After</span>
-        <h3>数据驱动</h3>
-        <ul>
-          <li>快速抓取海量真实评论</li>
-          <li>自动归类痛点和需求频次</li>
-          <li>竞品分析有据可依</li>
-          <li>直观「看到」用户如何使用产品</li>
-          <li>快速收敛方向</li>
-        </ul>
+    <h2>产品经理的<span class="accent">能力</span>画像</h2>
+    <div class="radar-container">
+      <div class="radar-core" style="width:460px;height:460px;">
+        <svg viewBox="0 0 560 560">
+          <defs>
+            <radialGradient id="centerGlow3" cx="50%" cy="50%">
+              <stop offset="0%" stop-color="rgba(230,57,70,0.15)"/>
+              <stop offset="50%" stop-color="rgba(230,57,70,0.03)"/>
+              <stop offset="100%" stop-color="transparent"/>
+            </radialGradient>
+          </defs>
+          <!-- Background glow -->
+          <circle cx="280" cy="280" r="260" fill="url(#centerGlow3)"/>
+          <!-- Dashed lines from center to 4 positions (shortened to not overlap text) -->
+          <g stroke="#e63946" stroke-width="2" stroke-dasharray="6,8" opacity="0.6">
+            <!-- 1:30 → upper right (stop before text) -->
+            <line x1="310" y1="250" x2="390" y2="170"/>
+            <!-- 4:30 → lower right -->
+            <line x1="310" y1="310" x2="390" y2="390"/>
+            <!-- 7:30 → lower left -->
+            <line x1="250" y1="310" x2="170" y2="390"/>
+            <!-- 10:30 → upper left -->
+            <line x1="250" y1="250" x2="170" y2="170"/>
+          </g>
+        </svg>
+        <!-- Center label: 原型验证 -->
+        <div class="radar-label" style="left:50%;top:50%;transform:translate(-50%,-50%);">
+          <div class="rl-name" style="color:#e63946;font-size:24px;">原型验证</div>
+          <div class="rl-desc" style="color:#e63946;font-size:13px;margin-top:6px;">让其他四项能力落地的关键</div>
+        </div>
+        <!-- 1:30 position: 用户洞察 -->
+        <div class="radar-label" style="left:82%;top:18%;"><div class="rl-name">用户洞察</div><div class="rl-desc">理解场景与行为</div></div>
+        <!-- 4:30 position: 概念定义 -->
+        <div class="radar-label" style="left:82%;top:82%;"><div class="rl-name">概念定义</div><div class="rl-desc">模糊概念 → 清晰定义</div></div>
+        <!-- 7:30 position: 产品决策 -->
+        <div class="radar-label" style="left:18%;top:82%;"><div class="rl-name">产品决策</div><div class="rl-desc">用数据辅助判断</div></div>
+        <!-- 10:30 position: 跨团队沟通 -->
+        <div class="radar-label" style="left:18%;top:18%;"><div class="rl-name">跨团队沟通</div><div class="rl-desc">消除信息不对称</div></div>
       </div>
     </div>
   </div>
 
   <!-- ====== 6: AI - PROTOTYPING ====== -->
   <div class="slide slide-content">
-    <h2>AI 改变了<span class="accent">原型</span></h2>
-    <p class="section-desc">真正的突破点</p>
-    <div class="compare-block">
+    <h2>AI提效带来的<span class="accent">质变</span></h2>
+    <div style="min-height:492px; display:flex; flex-direction:column; align-items:center; justify-content:center;">
+    <div class="compare-block" style="margin:0 auto;">
       <div class="compare-col old">
         <span class="col-tag">Before</span>
         <h3>慢速原型</h3>
@@ -849,65 +997,47 @@
         </ul>
       </div>
     </div>
-    <div class="compare-note">
-      <p><strong>原型能力是「传染」的。</strong>看到 UX 用 WorkBuddy 做出来后，我也开始自己上手。</p>
     </div>
   </div>
 
   <!-- ====== 7: DEMO ====== -->
   <div class="slide slide-content">
-    <h2>Demo：<span class="accent">AiKen</span> × AI</h2>
-    <p class="section-desc">真实案例展示 AI 如何贯穿硬件产品全流程</p>
-    <div class="showcase-grid">
-      <div class="showcase-card">
-        <div class="placeholder">🌐</div>
-        <h3>软硬件展示网站</h3>
-        <p>UX 用 WorkBuddy 制作，一个页面完整展示从开机到成片的全流程</p>
-        <p class="todo">[TODO: 截图或录屏]</p>
+    <h2>用原型驱动产品<span class="accent">每一个环节</span></h2>
+    <div class="showcase-grid" style="min-height:492px; align-items:center;">
+      <div class="showcase-card img-card" style="background-image:url('assets/soft-hard-demo2.png');">
+        <div class="card-overlay">
+          <h3>硬件 + 软件展示</h3>
+          <p>完整展示从开机到出片的全流程</p>
+        </div>
       </div>
-      <div class="showcase-card">
-        <div class="placeholder">🔗</div>
-        <h3>相机 + 打印机联动</h3>
-        <p>我自己用 WorkBuddy 做的联动 demo，验证核心使用场景</p>
-        <p class="todo">[TODO: 截图或录屏]</p>
+      <div class="showcase-card img-card" style="background-image:url('assets/printer-link02.png');">
+        <div class="card-overlay">
+          <h3>与口袋打印机联动</h3>
+          <p>利用原型直接跑通流程并梳理逻辑</p>
+        </div>
       </div>
     </div>
   </div>
 
   <!-- ====== 8: INSIGHTS ====== -->
   <div class="slide slide-content">
-    <h2>我的<span class="accent">核心体会</span></h2>
-    <p class="section-desc">AI 没有替代我的思考，但它把我最擅长的能力放大了</p>
+    <h2>我的体会</h2>
+    <p class="section-desc">不要让AI代替思考，利用它去放大擅长的能力</p>
     <div class="insight-block">
-      <p><strong>设计师背景 + Design Thinking + AI</strong> = Prototyping 能力质的飞跃。</p>
+      <p>借助AI快速广泛收集并整理信息来提效 <strong>「用户、市场、竞品」</strong></p>
     </div>
     <div class="insight-block">
-      <p>不是 AI 替代了思考，而是<strong>加速了验证循环</strong>。</p>
+      <p>利用AI快速学习并踏足自己不熟悉的领域 <strong>「如影像产品的定义」</strong></p>
     </div>
     <div class="insight-block">
-      <p>找到你自己的核心能力，让 AI 放大它。<strong>「先让自己看到真实，再决定做。」</strong></p>
-    </div>
-    <div class="insight-block">
-      <p>🤷 3D 效果图我还没搞明白。<strong>AI 也不是万能的。</strong></p>
+      <p>找到自己的核心能力，利用AI来放大它 <strong>「Design Thinking + Prototyping」</strong></p>
     </div>
   </div>
 
-  <!-- ====== 9: Q&A ====== -->
+  <!-- ====== 9: CLOSING ====== -->
   <div class="slide slide-content">
-    <h2><span class="accent">Q&A</span></h2>
-    <p class="section-desc">你打算在自己的工作中先用 AI 试什么？</p>
-    <div class="qa-area">
-      <div class="qa-poll" id="poll">
-        <button class="qa-poll-btn" onclick="vote('prototype')">🖥️ 做原型 / Demo</button>
-        <button class="qa-poll-btn" onclick="vote('research')">📊 用户调研分析</button>
-        <button class="qa-poll-btn" onclick="vote('writing')">📝 写文档 / PRD</button>
-        <button class="qa-poll-btn" onclick="vote('automation')">⚡ 自动化工作流</button>
-      </div>
-      <p id="pollResult" style="color:var(--accent-light); font-size:16px; min-height:24px;"></p>
-      <div class="qa-note">
-        <p>谢谢大家</p>
-      </div>
-    </div>
+    <h2>谢谢大家</h2>
+    <p class="section-desc" style="font-size:clamp(36px, 4.5vw, 64px); font-weight:900; color:var(--accent); margin-top:40px; line-height:1.3;">你最擅长的是什么？<br>如何利用AI放大它？</p>
   </div>
 
 </div>
@@ -920,7 +1050,7 @@
 <div class="nav-dots" id="navDots"></div>
 
 <script>
-  const TOTAL = 10;
+  const TOTAL = 12;
   let current = 0;
   const slides = document.getElementById('slides');
   const indicator = document.getElementById('pageIndicator');
